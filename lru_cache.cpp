@@ -91,19 +91,19 @@ private:
 int main() {
     LRUCache lru_cache1(1);
     lru_cache1.set(2, 1);
-    std::cout << lru_cache1.get(2) << std::endl;
+    std::cout << lru_cache1.get(2) << std::endl;  // 1
     lru_cache1.set(3, 2);
-    std::cout << lru_cache1.get(2) << std::endl;
-    std::cout << lru_cache1.get(3) << std::endl;
+    std::cout << lru_cache1.get(2) << std::endl;  // -1 not exist
+    std::cout << lru_cache1.get(3) << std::endl;  // 2
     std::cout << std::endl;
 
     LRUCache lru_cache2(2);
     lru_cache2.set(2, 1);
     lru_cache2.set(1, 1);
-    std::cout << lru_cache2.get(2) << std::endl;
+    std::cout << lru_cache2.get(2) << std::endl;  // 1
     lru_cache2.set(4, 1);
-    std::cout << lru_cache2.get(1) << std::endl;
-    std::cout << lru_cache2.get(2) << std::endl;
+    std::cout << lru_cache2.get(1) << std::endl;  // -1 not exist
+    std::cout << lru_cache2.get(2) << std::endl;  // 1
 
     std::cout << "Hello, LRU Cache!" << std::endl;
     return EXIT_SUCCESS;
