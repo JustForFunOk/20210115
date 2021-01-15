@@ -1,4 +1,5 @@
 #include <iostream>
+#include <list>
 
 class LRUCache {
 public:
@@ -8,6 +9,7 @@ public:
     * @param capacity: An integer
     */
     LRUCache(int capacity){
+        capacity_ = capacity;
     }
 
     /*
@@ -15,6 +17,26 @@ public:
      * @return: An integer
      */
     int get(int key) {
+        // find element in map
+        auto find_result = key_val_map_.find(key);
+
+        if(find_result != key_val_map_.end())
+        {
+            // find it, adjust element position in list
+            // old element in the front, new element in the end
+            for(auto it = key_list_.begin(); it != key_list_.end(); ++it)
+            {
+                if(*it == key)
+                {
+                    key_list_.erase(it);
+                    key_list_.push_back(key);
+                }
+            }
+
+            return find_result->second;
+        }
+
+        return NOT_FOUND;
     }
 
     /*
@@ -24,6 +46,11 @@ public:
      */
     void set(int key, int value) {
     }
+
+private:
+    int capacity_;
+    list<int> key_list_;
+    unordered_map<int, int> key_val_map_;
 };
 
 int main() {
