@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <unordered_map>
 
 class LRUCache {
 public:
@@ -23,11 +24,11 @@ public:
         if(find_result != key_val_map_.end())
         {
             // find it, adjust element position in list
-            // old element in the front, new element in the end
             for(auto it = key_list_.begin(); it != key_list_.end(); ++it)
             {
                 if(*it == key)
                 {
+                    // change the key position to the end of list
                     key_list_.erase(it);
                     key_list_.push_back(key);
                 }
@@ -45,12 +46,46 @@ public:
      * @return: nothing
      */
     void set(int key, int value) {
+        auto find_result = key_val_map_.find(key);
+
+        // exist in map, update the value, change position
+        if(find_result != key_val_map_.end())
+        {
+            find_result->second = value;  // update value
+
+            for(auto it = key_list_.begin(); it != key_list_.end(); ++it)
+            {
+                if(*it == key)
+                {
+                    key_list_.erase(it);
+                    key_list_.push_back(key);
+                }
+            }
+        }
+        else  // donot exist
+        {
+            // full
+            if(key_val_map_.size() == capacity_)
+            {
+                // find oldest_key in map and erase
+                int oldest_key = key_list_.front();
+                auto find_result = key_val_map_.find(oldest_key);
+                key_val_map_.erase(find_result);
+
+                // erase the oldest ele in list
+                key_list_.pop_front();
+            }
+            
+            // insert ele to map and the end of list
+            key_val_map_[key] = value;
+            key_list_.push_back(key);
+        }       
     }
 
 private:
     int capacity_;
-    list<int> key_list_;
-    unordered_map<int, int> key_val_map_;
+    std::list<int> key_list_;  // store the order, list: oldest(front) <------> newest(end)
+    std::unordered_map<int, int> key_val_map_;  // store key and value
 };
 
 int main() {
